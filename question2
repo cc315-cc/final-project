@@ -1,0 +1,97 @@
+1
+class CompleteBinaryTree:
+    def __init__(self, head=None):
+        self.head = head
+    
+    def parent(self, i):
+        """Return the parent node of the node at index i."""
+        if i == 0:
+            return None
+        else:
+            return self.head[(i-1)//2]
+    
+    def left_child(self, i):
+        """Return the left child node of the node at index i."""
+        left_child_index = 2*i + 1
+        if left_child_index < len(self.head):
+            return self.head[left_child_index]
+        else:
+            return None
+    
+    def right_child(self, i):
+        """Return the right child node of the node at index i."""
+        right_child_index = 2*i + 2
+        if right_child_index < len(self.head):
+            return self.head[right_child_index]
+        else:
+            return None
+
+2
+class MinPriorityQueue:
+    def __init__(self, head=None):
+        self.tree = CompleteBinaryTree(head)
+        self.size = len(head)
+        
+    def insert(self, key):
+        """Insert a new key into the priority queue and maintain the min-heap property."""
+        # Append the new key to the end of the list
+        self.tree.head.append(Node(key))
+        self.size += 1
+        # Bubble up the new key to restore the min-heap property
+        i = self.size - 1
+        while i > 0 and self.tree.head[i].key < self.tree.head[self.tree.parent(i)].key:
+            self.tree.head[i], self.tree.head[self.tree.parent(i)] = self.tree.head[self.tree.parent(i)], self.tree.head[i]
+            i = self.tree.parent(i)
+            
+    def delMin(self):
+        """Remove and return the minimum key from the priority queue."""
+        if self.size == 0:
+            return None
+        min_key = self.tree.head[0].key
+        # move the last key to the root
+        self.tree.head[0] = self.tree.head[-1]
+        self.tree.head.pop()
+        self.size -= 1
+        # bubble down the root to restore the min-heap property
+        i = 0
+        while (self.tree.left_child(i) is not None and self.tree.head[i].key > self.tree.left_child(i).key) or (
+                self.tree.right_child(i) is not None and self.tree.head[i].key > self.tree.right_child(i).key):
+            if self.tree.right_child(i) is None or self.tree.left_child(i).key < self.tree.right_child(i).key:
+                self.tree.head[i], self.tree.head[2*i+1] = self.tree.head[2*i+1], self.tree.head[i]
+                i = 2*i + 1
+            else:
+                self.tree.head[i], self.tree.head[2*i+2] = self.tree.head[2*i+2], self.tree.head[i]
+                i = 2*i + 2
+        return min_key
+
+
+3
+The time complexity of the insert() method in the minimum priority queue is O(log n), where n is the number of elements in the priority queue.
+
+The basic idea behind this analysis is that in the worst case, the new key has to be inserted at the leaf of the binary tree, and then it needs to be compared and potentially swapped with its parent all the way up to the root. The height of a complete binary tree with n nodes is log(n), so the maximum number of comparisons and swaps that need to be done is log(n). Since each comparison and swap takes O(1) time, the overall time complexity is O(log n).
+
+The time complexity of the delMin() method in the minimum priority queue is also O(log n).
+
+This is because, in the worst case, the new root, which is the last element, needs to be compared and potentially swapped with its children all the way down to the leaf of the binary tree. As with the insert() method, the height of a complete binary tree with n nodes is log(n), so the maximum number of comparisons and swaps that need to be done is log(n). Since each comparison and swap takes O(1) time, the overall time complexity is O(log n).
+
+It's important to notice that both operations are O(log n) even though we are using linkedlist underneath, as the basic operations i.e, comparision and swap are same as that of an array-based implementation and also the height of the tree is log(n) as it is a complete binary tree which is balanced
+
+4
+As a simple performance benchmark, we can test the time complexity of the insert() and delMin() methods by timing the execution of 1000 insertion and deletions on the priority queue. The results can be visualized using a line graph, with time on the y-axis and operations on the x-axis.
+
+5
+code:
+digraph heap {
+    node [shape=circle, fixedsize=true];
+    "0" [label=0];
+    "1" [label=1];
+    "2" [label=2];
+    "3" [label=3];
+    "4" [label=4];
+    "0" -> "1";
+    "0" -> "2";
+    "1" -> "3";
+    "1" -> "4";
+    "2" -> "5";
+    "2" -> "6";
+}
