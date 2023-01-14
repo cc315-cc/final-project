@@ -64,7 +64,12 @@ class MinPriorityQueue:
                 i = 2*i + 2
         return min_key
 
+Explain:
+A minimum priority queue is a data structure that allows for efficient insertion and removal of elements with the smallest key value. In a complete binary tree, the element with the smallest key value will always be at the root.
+To implement a minimum priority queue based on the complete binary tree above, we can use the following operations:
+insert(): To insert an element into the minimum priority queue, we first add it to the next available spot in the tree, starting at the leftmost leaf and working our way up. Once the element is inserted, we compare its key value to its parent's key value. If the element's key value is smaller than its parent's, we swap the two elements. We continue comparing and swapping up the tree until the element is in the correct position, or until it reaches the root.
 
+delMin(): To remove the element with the smallest key value from the minimum priority queue, we first remove the root element and replace it with the last leaf element. We then compare the key value of the new root element with its children. If the key value of the left or right child is smaller than the key value of the new root, we swap the root element with the child element. We continue to compare and swap down the tree until the element is in the correct position.
 3
 The time complexity of the insert() method in the minimum priority queue is O(log n), where n is the number of elements in the priority queue.
 
